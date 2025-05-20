@@ -8,7 +8,6 @@ import br.com.fiap.mottooth.repository.BeaconRepository;
 import br.com.fiap.mottooth.repository.ModeloBeaconRepository;
 import br.com.fiap.mottooth.repository.MotoRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class BeaconService {
 
     private final BeaconRepository beaconRepository;
@@ -68,7 +66,7 @@ public class BeaconService {
         if (!beaconRepository.existsById(id)) {
             throw new EntityNotFoundException("Beacon não encontrado com ID: " + id);
         }
-        
+
         Beacon beacon = convertToEntity(beaconDTO);
         beacon.setId(id);
         beacon = beaconRepository.save(beacon);
@@ -89,17 +87,17 @@ public class BeaconService {
         dto.setId(beacon.getId());
         dto.setUuid(beacon.getUuid());
         dto.setBateria(beacon.getBateria());
-        
+
         if (beacon.getMoto() != null) {
             dto.setMotoId(beacon.getMoto().getId());
             dto.setPlacaMoto(beacon.getMoto().getPlaca());
         }
-        
+
         if (beacon.getModeloBeacon() != null) {
             dto.setModeloBeaconId(beacon.getModeloBeacon().getId());
             dto.setModeloNome(beacon.getModeloBeacon().getNome());
         }
-        
+
         return dto;
     }
 
@@ -108,19 +106,19 @@ public class BeaconService {
         beacon.setId(dto.getId());
         beacon.setUuid(dto.getUuid());
         beacon.setBateria(dto.getBateria());
-        
+
         if (dto.getMotoId() != null) {
             Moto moto = motoRepository.findById(dto.getMotoId())
                     .orElseThrow(() -> new EntityNotFoundException("Moto não encontrada com ID: " + dto.getMotoId()));
             beacon.setMoto(moto);
         }
-        
+
         if (dto.getModeloBeaconId() != null) {
             ModeloBeacon modeloBeacon = modeloBeaconRepository.findById(dto.getModeloBeaconId())
                     .orElseThrow(() -> new EntityNotFoundException("Modelo de beacon não encontrado com ID: " + dto.getModeloBeaconId()));
             beacon.setModeloBeacon(modeloBeacon);
         }
-        
+
         return beacon;
     }
 }
