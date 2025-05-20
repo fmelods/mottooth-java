@@ -5,7 +5,6 @@ import br.com.fiap.mottooth.service.MotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/motos")
-@RequiredArgsConstructor
 @Tag(name = "Motos", description = "API para gerenciamento de motos")
 public class MotoController {
 
@@ -32,11 +30,11 @@ public class MotoController {
             @RequestParam(required = false) Long clienteId,
             @RequestParam(required = false) Long modeloId,
             @PageableDefault(size = 10, sort = "id") Pageable pageable) {
-        
+
         if (placa != null || clienteId != null || modeloId != null) {
             return ResponseEntity.ok(motoService.findByFilters(placa, clienteId, modeloId, pageable));
         }
-        
+
         return ResponseEntity.ok(motoService.findAll(pageable));
     }
 
