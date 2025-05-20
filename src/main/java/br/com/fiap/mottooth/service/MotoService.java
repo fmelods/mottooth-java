@@ -8,7 +8,6 @@ import br.com.fiap.mottooth.repository.ClienteRepository;
 import br.com.fiap.mottooth.repository.ModeloMotoRepository;
 import br.com.fiap.mottooth.repository.MotoRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -17,12 +16,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class MotoService {
 
     private final MotoRepository motoRepository;
     private final ClienteRepository clienteRepository;
     private final ModeloMotoRepository modeloMotoRepository;
+
+    public MotoService(MotoRepository motoRepository, ClienteRepository clienteRepository, ModeloMotoRepository modeloMotoRepository) {
+        this.motoRepository = motoRepository;
+        this.clienteRepository = clienteRepository;
+        this.modeloMotoRepository = modeloMotoRepository;
+    }
 
     @Cacheable(value = "motos", key = "#id")
     public MotoDTO findById(Long id) {
@@ -62,7 +66,7 @@ public class MotoService {
         if (!motoRepository.existsById(id)) {
             throw new EntityNotFoundException("Moto não encontrada com ID: " + id);
         }
-        
+
         Moto moto = convertToEntity(motoDTO);
         moto.setId(id);
         moto = motoRepository.save(moto);
@@ -82,18 +86,18 @@ public class MotoService {
         MotoDTO dto = new MotoDTO();
         dto.setId(moto.getId());
         dto.setPlaca(moto.getPlaca());
-        
+
         if (moto.getCliente() != null) {
             dto.setClienteId(moto.getCliente().getId());
             dto.setNomeCliente(moto.getCliente().getNome());
         }
-        
+
         if (moto.getModeloMoto() != null) {
             dto.setModeloMotoId(moto.getModeloMoto().getId());
             dto.setModeloNome(moto.getModeloMoto().getNome());
             dto.setFabricante(moto.getModeloMoto().getFabricante());
         }
-        
+
         return dto;
     }
 
@@ -101,19 +105,19 @@ public class MotoService {
         Moto moto = new Moto();
         moto.setId(dto.getId());
         moto.setPlaca(dto.getPlaca());
-        
+
         if (dto.getClienteId() != null) {
             Cliente cliente = clienteRepository.findById(dto.getClienteId())
                     .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + dto.getClienteId()));
             moto.setCliente(cliente);
         }
-        
+
         if (dto.getModeloMotoId() != null) {
             ModeloMoto modeloMoto = modeloMotoRepository.findById(dto.getModeloMotoId())
                     .orElseThrow(() -> new EntityNotFoundException("Modelo de moto não encontrado com ID: " + dto.getModeloMotoId()));
             moto.setModeloMoto(modeloMoto);
         }
-        
+
         return moto;
     }
 }

@@ -8,7 +8,6 @@ import br.com.fiap.mottooth.repository.LocalizacaoRepository;
 import br.com.fiap.mottooth.repository.MotoRepository;
 import br.com.fiap.mottooth.repository.PatioRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class LocalizacaoService {
 
     private final LocalizacaoRepository localizacaoRepository;
@@ -73,7 +71,7 @@ public class LocalizacaoService {
         if (!localizacaoRepository.existsById(id)) {
             throw new EntityNotFoundException("Localização não encontrada com ID: " + id);
         }
-        
+
         Localizacao localizacao = convertToEntity(localizacaoDTO);
         localizacao.setId(id);
         localizacao = localizacaoRepository.save(localizacao);
@@ -95,17 +93,17 @@ public class LocalizacaoService {
         dto.setPosicaoX(localizacao.getPosicaoX());
         dto.setPosicaoY(localizacao.getPosicaoY());
         dto.setDataHora(localizacao.getDataHora());
-        
+
         if (localizacao.getMoto() != null) {
             dto.setMotoId(localizacao.getMoto().getId());
             dto.setPlacaMoto(localizacao.getMoto().getPlaca());
         }
-        
+
         if (localizacao.getPatio() != null) {
             dto.setPatioId(localizacao.getPatio().getId());
             dto.setNomePatio(localizacao.getPatio().getNome());
         }
-        
+
         return dto;
     }
 
@@ -115,19 +113,19 @@ public class LocalizacaoService {
         localizacao.setPosicaoX(dto.getPosicaoX());
         localizacao.setPosicaoY(dto.getPosicaoY());
         localizacao.setDataHora(dto.getDataHora() != null ? dto.getDataHora() : LocalDateTime.now());
-        
+
         if (dto.getMotoId() != null) {
             Moto moto = motoRepository.findById(dto.getMotoId())
                     .orElseThrow(() -> new EntityNotFoundException("Moto não encontrada com ID: " + dto.getMotoId()));
             localizacao.setMoto(moto);
         }
-        
+
         if (dto.getPatioId() != null) {
             Patio patio = patioRepository.findById(dto.getPatioId())
                     .orElseThrow(() -> new EntityNotFoundException("Pátio não encontrado com ID: " + dto.getPatioId()));
             localizacao.setPatio(patio);
         }
-        
+
         return localizacao;
     }
 }
