@@ -5,7 +5,6 @@ import br.com.fiap.mottooth.service.BeaconService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/beacons")
-@RequiredArgsConstructor
 @Tag(name = "Beacons", description = "API para gerenciamento de beacons")
 public class BeaconController {
 
@@ -32,11 +30,11 @@ public class BeaconController {
             @RequestParam(required = false) Long motoId,
             @RequestParam(required = false) Long modeloId,
             @PageableDefault(size = 10, sort = "id") Pageable pageable) {
-        
+
         if (uuid != null || motoId != null || modeloId != null) {
             return ResponseEntity.ok(beaconService.findByFilters(uuid, motoId, modeloId, pageable));
         }
-        
+
         return ResponseEntity.ok(beaconService.findAll(pageable));
     }
 
