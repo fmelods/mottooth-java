@@ -28,15 +28,11 @@ O Mottooth é uma solução desenvolvida para a empresa Mottu, que permite o ras
 ## Como Executar
 
 1. Clone o repositório:
-\`\`\`bash
 git clone https://github.com/seu-usuario/mottooth.git
 cd mottooth
-\`\`\`
 
 2. Compile e execute o projeto:
-\`\`\`bash
 mvn spring-boot:run
-\`\`\`
 
 3. Acesse a aplicação:
    - API: http://localhost:8080/api
@@ -51,13 +47,11 @@ O projeto está configurado para usar o H2 Database em memória por padrão. Nã
 ### Oracle (Produção)
 Para usar o Oracle Database, descomente as configurações no arquivo `application.properties` e ajuste as credenciais conforme necessário:
 
-\`\`\`properties
 spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
 spring.datasource.username=mottooth
 spring.datasource.password=mottooth
 spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
-\`\`\`
 
 ## Estrutura do Projeto
 
