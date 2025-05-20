@@ -5,7 +5,6 @@ import br.com.fiap.mottooth.service.LocalizacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/localizacoes")
-@RequiredArgsConstructor
 @Tag(name = "Localizações", description = "API para gerenciamento de localizações")
 public class LocalizacaoController {
 
@@ -37,11 +35,11 @@ public class LocalizacaoController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim,
             @PageableDefault(size = 10, sort = "dataHora") Pageable pageable) {
-        
+
         if (motoId != null || patioId != null || dataInicio != null || dataFim != null) {
             return ResponseEntity.ok(localizacaoService.findByFilters(motoId, patioId, dataInicio, dataFim, pageable));
         }
-        
+
         return ResponseEntity.ok(localizacaoService.findAll(pageable));
     }
 
